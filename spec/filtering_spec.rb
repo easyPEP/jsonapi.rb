@@ -102,12 +102,12 @@ RSpec.describe UsersController, type: :request do
           third_user.update(created_at: '2013-01-01')
 
           {
-            filter: { created_before: '2013-02-01' }
+            filter: { created_before_gt: '2013-02-01' }
           }
         end
 
         it 'ensures ransack scopes are working properly' do
-          ransack = User.ransack({ created_before: '2013-02-01' })
+          ransack = User.ransack({ created_before_gt: '2013-02-01' })
           expected_sql = 'SELECT "users".* FROM "users" WHERE '\
                          '(created_at < \'2013-02-01\')'
           expect(ransack.result.to_sql).to eq(expected_sql)

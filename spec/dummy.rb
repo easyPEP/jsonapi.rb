@@ -31,7 +31,7 @@ end
 
 class User < ActiveRecord::Base
   has_many :notes
-  scope :created_before, ->(date) { where('created_at < ?', date) }
+  scope :created_before_gt, ->(date) { where('created_at < ?', date) }
 end
 
 class Note < ActiveRecord::Base
