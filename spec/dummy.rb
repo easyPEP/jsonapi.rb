@@ -85,7 +85,7 @@ class UsersController < ActionController::Base
     allowed_fields = [
       :first_name, :last_name, :created_at,
       :notes_created_at, :notes_quantity,
-      :created_before
+      :created_before_gt
     ]
     options = { sort_with_expressions: true }
 
