@@ -37,7 +37,7 @@ module JSONAPI
     # @return [NilClass]
     def self.add_errors_renderer!
       ActionController::Renderers.add(:jsonapi_errors) do |resource, options|
-        self.content_type ||= Mime[:jsonapi]
+        self.content_type = Mime[:jsonapi] if self.media_type.nil?
 
         many = JSONAPI::Rails.is_collection?(resource, options[:is_collection])
         resource = [resource] unless many
@@ -47,7 +47,7 @@ module JSONAPI
         ) unless resource.is_a?(ActiveModel::Errors)
 
         errors = []
-        model = resource.instance_variable_get('@base')
+        model = resource.instance_variable_get(:@base)
 
         if respond_to?(:jsonapi_serializer_class, true)
           model_serializer = jsonapi_serializer_class(model, false)
@@ -90,7 +90,7 @@ module JSONAPI
     # @return [NilClass]
     def self.add_renderer!
       ActionController::Renderers.add(:jsonapi) do |resource, options|
-        self.content_type ||= Mime[:jsonapi]
+        self.content_type = Mime[:jsonapi] if self.media_type.nil?
 
         JSONAPI_METHODS_MAPPING.to_a[0..1].each do |opt, method_name|
           next unless respond_to?(method_name, true)
