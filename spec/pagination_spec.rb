@@ -53,6 +53,8 @@ RSpec.describe UsersController, type: :request do
 
         context 'on page 2 out of 3' do
           let(:as_list) { }
+          # .compact_blank is not available in our Rails version
+          # rubocop:disable Rails/CompactBlank
           let(:params) do
             {
               page: { number: 2, size: 1 },
@@ -60,6 +62,7 @@ RSpec.describe UsersController, type: :request do
               as_list: as_list
             }.reject { |_k, _v| _v.blank? }
           end
+          # rubocop:enable Rails/CompactBlank
 
           context 'on an array of resources' do
             let(:as_list) { true }
@@ -153,12 +156,15 @@ RSpec.describe UsersController, type: :request do
 
         context 'on paging beyond the last page' do
           let(:as_list) { }
+          # .compact_blank is not available in our Rails version
+          # rubocop:disable Rails/CompactBlank
           let(:params) do
             {
               page: { number: 5, size: 1 },
               as_list: as_list
             }.reject { |_k, _v| _v.blank? }
           end
+          # rubocop:enable Rails/CompactBlank
 
           context 'on an array of resources' do
             let(:as_list) { true }

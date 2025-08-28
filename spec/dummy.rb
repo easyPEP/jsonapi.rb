@@ -43,6 +43,21 @@ class Note < ActiveRecord::Base
   validates_format_of :title, without: /BAD_TITLE/
   validates_numericality_of :quantity, less_than: 100, if: :quantity?
   belongs_to :user, required: true
+
+  validate :nice_title
+
+  # this validation is added to test that a validation error added as a string
+  # (instead of a symbol) works as well
+  #
+  # see https://api.rubyonrails.org/v7.0.8.7/classes/ActiveModel/Errors.html#method-i-add
+  #
+  # > If `type` is a string, it will be used as error message.
+  #
+  def nice_title
+    return unless title == 'NOT_SO_NICE_TITLE'
+
+    errors.add(:title, 'is not so nice')
+  end
 end
 
 class CustomNoteSerializer

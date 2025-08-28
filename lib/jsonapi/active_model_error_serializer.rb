@@ -13,7 +13,9 @@ module JSONAPI
 
     attribute :code do |object|
       _, error_hash = object
-      code = error_hash[:error] unless error_hash[:error].is_a?(Hash)
+      unless error_hash[:error].is_a?(Hash) || error_hash[:error].is_a?(String)
+        code = error_hash[:error]
+      end
       code ||= error_hash[:message] || :invalid
       # `parameterize` separator arguments are different on Rails 4 vs 5...
       code.to_s.delete("''").parameterize.tr('-', '_')
@@ -29,9 +31,15 @@ module JSONAPI
           error_key, nil, error_hash[:error]
         )
       elsif error_hash[:error].present?
-        message = errors_object.generate_message(
-          error_key, error_hash[:error], error_hash
-        )
+        # if the error was added as a string, we do not need to generate an
+        # error message, but use the error as is
+        if error_hash[:error].is_a?(String)
+          message = error_hash[:error]
+        else
+          message = errors_object.generate_message(
+            error_key, error_hash[:error], error_hash
+          )
+        end
       else
         message = error_hash[:message]
       end
